@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Авторизация</title>
+</head>
+<body>
+{% if error %}
+    <div>Неверный логин или пароль</div>
+{% endif %}
+<form action="/sigin/" method="post">
+    {% csrf_token %}
+    {{ auth_form }}
+    <input type="submit" value="Войти">
+</form>
+</body>
+</html>

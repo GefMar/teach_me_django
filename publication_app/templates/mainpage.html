@@ -1,17 +1,22 @@
+{% load menu_tags %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{{title}}</title>
+    <title>{{ title }}</title>
 </head>
 <body>
+<div id="user">{% login_menu %}</div>
+<div id="menu">
+    {% menu %}
+</div>
 <div>
     {% for post in posts %}
-    <h2> {{post.title}} </h2>
-    {% if post.image %}
-    <div><img src="{{post.image.url}}">Текст</img></div>
-    {% endif %}
-    <div>{{post.text}}</div>
+        <h2> {{ post.title }} </h2>
+        {% if post.image %}
+            <div><img src="{{ post.image.url }}" alt="Текст картинки"></div>
+        {% endif %}
+        <div>{{ post.text }}</div>
     {% endfor %}
 
 </div>

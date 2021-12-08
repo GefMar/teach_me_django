@@ -20,13 +20,14 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 
-from publication_app.views import main_page, registration_page
+from publication_app.views import main_page, registration_page, auth_page
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', main_page, name='main_page'),
-    path('registration/', registration_page, name="registration")
+    path('registration/', registration_page, name="registration"),
+    path('sigin/', auth_page, name="sigin"),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
