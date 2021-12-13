@@ -1,5 +1,8 @@
 from django.contrib.auth import authenticate, login
+# from django.contrib.auth.decorators import login_required
+from django.db.models import Q, F
 from django.shortcuts import render, redirect
+from django.views.generic import ListView
 
 from .forms.auth import AuthForm
 from .forms.registrations import RegistrationForm
@@ -7,10 +10,35 @@ from .models import Post
 
 
 def main_page(request):
-    posts = Post.objects.filter(is_public=True).order_by("-create_date", "-id").all()
+    q_filters = Q(is_public=True, )
+    posts = Post.objects.filter(q_filters).order_by("-create_date", "-id").all()
     main_menu = []
     context = {'title': "ПРИВЕТ МИР", "posts": posts, "user": request.user}
     return render(request, 'mainpage.html', context)
+
+
+class PostListView(ListView):
+    queryset = Post.objects.all()
+    template_name = 'mainpage.html'
+    context_object_name = 'posts'
+    ordering = ("-create_date", "-id")
+    http_method_names = ['get', ]
+    form_class = RegistrationForm
+
+    def get_queryset(self):
+        if self.request.user.is_authenticated:
+            return self.queryset.all()
+        return self.queryset.filter(is_public=True).all()
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(object_list=object_list, **kwargs)
+        context['title'] = "Супер ПОСТЫ"
+        context['user'] = self.request.user
+        return context
+
+    def get(self, request, *args, **kwargs):
+        result = super().get(request, *args, **kwargs)
+        return result
 
 
 def registration_page(request):

@@ -19,8 +19,10 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
+from drf_spectacular.views import SpectacularRedocView, SpectacularSwaggerView, SpectacularAPIView
 
-from publication_app.views import main_page, registration_page, auth_page
+from publication_app.api.views.publications import PostsView
+from publication_app.views import main_page, registration_page, auth_page, PostListView
 
 
 urlpatterns = [
@@ -28,6 +30,16 @@ urlpatterns = [
     path('', main_page, name='main_page'),
     path('registration/', registration_page, name="registration"),
     path('sigin/', auth_page, name="sigin"),
+    path('posts/', PostListView.as_view()),
+path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
+    path("api/redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"),
+path(
+        "api/swagger/",
+        SpectacularSwaggerView.as_view(),
+        name="swagger-ui",
+    ),
+    path("api/posts/", PostsView.as_view({'get': 'list', 'post': 'create'}), name="api-posts")
+
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -4,6 +4,7 @@ from django.core.validators import RegexValidator
 
 
 class Post(models.Model):
+    user = models.ForeignKey(User, related_name='posts', on_delete=models.PROTECT)
     create_date = models.DateTimeField(auto_now_add=True)
     is_public = models.BooleanField(default=True)
     title = models.CharField(max_length=256, unique=False, blank=False, null=False)
@@ -23,5 +24,3 @@ class Profile(models.Model):
     )
     bio = models.TextField(null=True, blank=True)
     github = models.URLField(max_length=2048, null=True, blank=True)
-    
-        
