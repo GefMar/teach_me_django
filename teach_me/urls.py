@@ -16,12 +16,16 @@ Including another URLconf
 
 from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from django.urls import path
+from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from drf_spectacular.views import SpectacularRedocView, SpectacularSwaggerView, SpectacularAPIView
 
-from publication_app.api.views.publications import PostsView
+from publication_app.api.router import api_router as publications_router
+from media_app.api.router import api_router as media_router
+from tags_app.api.router import api_router as tag_router
+from likes_app.api.router import api_router as like_router
+from comments_app.api.router import api_router as comments_router
 from publication_app.views import main_page, registration_page, auth_page, PostListView
 
 
@@ -31,14 +35,18 @@ urlpatterns = [
     path('registration/', registration_page, name="registration"),
     path('sigin/', auth_page, name="sigin"),
     path('posts/', PostListView.as_view()),
-path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
+    path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path("api/redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"),
-path(
+    path(
         "api/swagger/",
         SpectacularSwaggerView.as_view(),
         name="swagger-ui",
     ),
-    path("api/posts/", PostsView.as_view({'get': 'list', 'post': 'create'}), name="api-posts")
+    path('api/', include(publications_router.urls)),
+    path('api/', include(media_router.urls)),
+    path('api/', include(tag_router.urls)),
+    path('api/', include(like_router.urls)),
+    path('api/', include(comments_router.urls)),
 
 ]
 
