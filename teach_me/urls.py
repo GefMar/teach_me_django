@@ -28,6 +28,11 @@ from likes_app.api.router import api_router as like_router
 from comments_app.api.router import api_router as comments_router
 from publication_app.views import main_page, registration_page, auth_page, PostListView
 
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -47,6 +52,8 @@ urlpatterns = [
     path('api/', include(tag_router.urls)),
     path('api/', include(like_router.urls)),
     path('api/', include(comments_router.urls)),
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
 ]
 
